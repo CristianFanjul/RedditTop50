@@ -1,4 +1,4 @@
-package com.example.reddittop50.home
+package com.example.reddittop50.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

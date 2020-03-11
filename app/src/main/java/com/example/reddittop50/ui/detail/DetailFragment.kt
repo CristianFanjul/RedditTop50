@@ -1,4 +1,4 @@
-package com.example.reddittop50.detail
+package com.example.reddittop50.ui.detail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,6 +12,5 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         super.onActivityCreated(savedInstanceState)
         val article = arguments?.getParcelable<Article>(Constants.ARTICLE_KEY)
             ?: throw RuntimeException("Article key not present.")
-
     }
 }

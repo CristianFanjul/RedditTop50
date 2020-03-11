@@ -46,6 +46,11 @@ dependencies {
     //Architecture Components
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
+    // Retrofit & OkHttp
+    implementation 'com.squareup.retrofit2:retrofit:2.7.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
+    implementation("com.squareup.okhttp3:logging-interceptor:4.3.1")
+
     // Testing stuff.
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

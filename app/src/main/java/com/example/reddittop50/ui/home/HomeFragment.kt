@@ -1,4 +1,4 @@
-package com.example.reddittop50.home
+package com.example.reddittop50.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
