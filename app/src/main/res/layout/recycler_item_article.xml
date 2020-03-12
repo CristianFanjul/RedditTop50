@@ -37,7 +37,7 @@
         tools:text="20 hours ago" />
 
     <ImageView
-        android:id="@+id/img_vw_bp_article_image"
+        android:id="@+id/img_vw_article_image"
         android:layout_width="@dimen/avatar_size"
         android:layout_height="@dimen/avatar_size"
         android:layout_marginTop="@dimen/half_standard_margin"
@@ -49,6 +49,7 @@
         app:layout_constraintTop_toBottomOf="@id/txt_vw_username" />
 
     <TextView
+        android:id="@+id/txt_vw_article_title"
         style="@style/StandardDrawerLabel"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -56,10 +57,10 @@
         android:layout_marginEnd="@dimen/half_standard_margin"
         android:ellipsize="end"
         android:maxLines="3"
-        app:layout_constraintBottom_toBottomOf="@id/img_vw_bp_article_image"
+        app:layout_constraintBottom_toBottomOf="@id/img_vw_article_image"
         app:layout_constraintEnd_toStartOf="@id/img_vw_arrow"
-        app:layout_constraintStart_toEndOf="@id/img_vw_bp_article_image"
-        app:layout_constraintTop_toTopOf="@id/img_vw_bp_article_image"
+        app:layout_constraintStart_toEndOf="@id/img_vw_article_image"
+        app:layout_constraintTop_toTopOf="@id/img_vw_article_image"
         tools:text="Post description post description post description  " />
 
     <ImageView
@@ -68,9 +69,9 @@
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_keyboard_arrow_right_24"
         android:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@id/img_vw_bp_article_image"
+        app:layout_constraintBottom_toBottomOf="@id/img_vw_article_image"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/img_vw_bp_article_image" />
+        app:layout_constraintTop_toTopOf="@id/img_vw_article_image" />
 
     <ImageView
         android:id="@+id/img_vw_dismiss_post"
@@ -80,9 +81,10 @@
         android:src="@drawable/ic_dismiss"
         android:tint="#fff"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/img_vw_bp_article_image" />
+        app:layout_constraintTop_toBottomOf="@id/img_vw_article_image" />
 
     <TextView
+        android:id="@+id/txt_vw_dismiss_post"
         style="@style/StandardDrawerLabel"
         android:paddingStart="@dimen/half_standard_margin"
         android:text="@string/dismiss_post"

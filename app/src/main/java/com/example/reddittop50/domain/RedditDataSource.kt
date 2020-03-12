@@ -1,8 +1,6 @@
 package com.example.reddittop50.domain
 
 import com.example.reddittop50.model.ApiResponse
-import com.example.reddittop50.model.Article
-import com.example.reddittop50.model.Data
 import com.example.reddittop50.model.QueryParams
 import com.example.reddittop50.retrofit.IApiClient
 
