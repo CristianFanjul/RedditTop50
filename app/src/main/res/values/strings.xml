@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RedditTop50</string>
+    <string name="dismiss_post">Dismiss post</string>
+    <string name="comments_number">%d comments</string>
+    <string name="hours_ago">%d hours ago</string>
+    <string name="menu_home">Home</string>
 </resources>
