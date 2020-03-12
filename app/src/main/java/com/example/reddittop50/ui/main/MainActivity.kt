@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.reddittop50.R
 import com.example.reddittop50.RedditTop50App
+import com.example.reddittop50.misc.Constants
 import com.example.reddittop50.misc.showSnackbar
 import com.example.reddittop50.model.Article
 import com.example.reddittop50.ui.ViewModelFactory
@@ -103,16 +104,13 @@ class MainActivity : AppCompatActivity(), ArticlesPagedAdapter.IOnArticleListene
     }
 
     override fun onArticleDismissed(item: Article) {
-        // TODO: find out out to remove an item from the immutable list that belongs to the PagedListAdapter.
-        drawer_layout.showSnackbar("TODO: find out out to remove an item from the immutable list that belongs to the PagedListAdapter.")
+        item.visible = false
 
         // The code below only dismisses the item visually, but the immutable list is still containing it.
-        /*
         val position = adapter.currentList?.indexOf(item) ?: Constants.INDEX_NOT_FOUND
         if (position != Constants.INDEX_NOT_FOUND) {
-            adapter.notifyItemRemoved(position)
+            adapter.notifyItemChanged(position)
         }
-        */
     }
 
     private fun closeDrawer() {
