@@ -47,9 +47,12 @@ class ArticlesPageKeyedDataSource(
                 val data = apiResponse.content.data
                 val after = data?.after
                 val articlesList = mutableListOf<Article>()
-                data?.children?.forEach {
-                    it.article?.let { article -> articlesList.add(article) }
+                data?.children?.map {
+                    it.article?.let { article ->
+                        article.visible = true
+                        articlesList.add(article) }
                 }
+
                 success(articlesList, after)
             } else {
                 val message = (apiResponse as Result.Error).exception.message
