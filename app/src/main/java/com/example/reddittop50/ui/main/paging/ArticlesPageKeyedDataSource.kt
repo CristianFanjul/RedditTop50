@@ -50,7 +50,8 @@ class ArticlesPageKeyedDataSource(
                 data?.children?.map {
                     it.article?.let { article ->
                         article.visible = true
-                        articlesList.add(article) }
+                        articlesList.add(article)
+                    }
                 }
 
                 success(articlesList, after)

@@ -1,6 +1,9 @@
 package com.example.reddittop50.di
 
-import com.example.reddittop50.domain.*
+import com.example.reddittop50.domain.IRedditDataSource
+import com.example.reddittop50.domain.IRedditRepository
+import com.example.reddittop50.domain.RedditRemoteDataSource
+import com.example.reddittop50.domain.RedditRepository
 import dagger.Binds
 import dagger.Module
 
