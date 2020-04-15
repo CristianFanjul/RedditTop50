@@ -1,19 +1,18 @@
 package com.example.reddittop50.domain
 
-import android.content.Context
 import com.example.reddittop50.retrofit.RetrofitFactory
 
 object ServiceLocator {
 
-    var redditRepository: RedditRepository? = null
+    var redditRepository: IRedditRepository? = null
 
-    fun provideRedditRepository(context: Context): RedditRepository {
+    fun provideRedditRepository(): IRedditRepository {
         synchronized(this) {
-            return redditRepository ?: redditRepository ?: createRedditRepository(context)
+            return redditRepository ?: redditRepository ?: createRedditRepository()
         }
     }
 
-    private fun createRedditRepository(context: Context): RedditRepository {
+    private fun createRedditRepository(): IRedditRepository {
         val redditDataSource = RedditRemoteDataSource(RetrofitFactory.articlesRetrofitService())
         return RedditRepository(redditDataSource)
     }

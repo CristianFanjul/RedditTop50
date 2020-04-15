@@ -1,7 +1,7 @@
 package com.example.reddittop50
 
 import android.app.Application
-import com.example.reddittop50.domain.RedditRepository
+import com.example.reddittop50.domain.IRedditRepository
 import com.example.reddittop50.domain.ServiceLocator
 
 class RedditTop50App : Application() {
@@ -10,8 +10,7 @@ class RedditTop50App : Application() {
         lateinit var instance: RedditTop50App
     }
 
-    val redditRepository: RedditRepository
-        get() = ServiceLocator.provideRedditRepository(this)
+    val redditRepository: IRedditRepository get() = ServiceLocator.provideRedditRepository()
 
     override fun onCreate() {
         super.onCreate()
