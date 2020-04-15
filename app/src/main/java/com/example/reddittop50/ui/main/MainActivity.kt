@@ -13,19 +13,18 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.reddittop50.R
-import com.example.reddittop50.RedditTop50App
 import com.example.reddittop50.misc.Constants
-import com.example.reddittop50.misc.showSnackbar
 import com.example.reddittop50.model.Article
 import com.example.reddittop50.ui.ViewModelFactory
 import com.example.reddittop50.ui.home.HomeFragment
 import com.example.reddittop50.ui.main.paging.ArticlesPagedAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity(), ArticlesPagedAdapter.IOnArticleListener {
 
     private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory(RedditTop50App.instance.redditRepository)
+        ViewModelFactory()
     }
 
     private lateinit var appBarConfiguration: AppBarConfiguration

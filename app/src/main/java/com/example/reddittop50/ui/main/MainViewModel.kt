@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.example.reddittop50.RedditTop50App
 import com.example.reddittop50.domain.GetArticlesUseCase
 import com.example.reddittop50.model.Article
 import com.example.reddittop50.model.QueryParams
@@ -12,12 +13,20 @@ import com.example.reddittop50.ui.main.paging.ArticlePagedCallback
 import com.example.reddittop50.ui.main.paging.ArticlesDataFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MainViewModel(val articlesUseCase: GetArticlesUseCase) : ViewModel() {
+class MainViewModel : ViewModel() {
     lateinit var items: LiveData<PagedList<Article>>
     var queryParams = QueryParams()
     val dataLoading = MutableLiveData<Boolean>()
     val snackbarText = MutableLiveData<String>()
+
+    @Inject
+    lateinit var articlesUseCase: GetArticlesUseCase
+
+    init {
+        RedditTop50App.instance.androidInjector().inject(this)
+    }
 
     private val pagedCallback = object :
         ArticlePagedCallback {
