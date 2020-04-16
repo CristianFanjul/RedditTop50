@@ -6,6 +6,7 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.example.reddittop50.R
 import com.example.reddittop50.model.Article
+import com.example.reddittop50.ui.main.IOnArticleListener
 
 class ArticlesPagedAdapter(private val listener: IOnArticleListener) :
     PagedListAdapter<Article, ArticleViewHolder>(
@@ -35,10 +36,5 @@ class ArticlesPagedAdapter(private val listener: IOnArticleListener) :
                 override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
                     oldItem == newItem
             }
-    }
-
-    interface IOnArticleListener {
-        fun onArticleClicked(item: Article)
-        fun onArticleDismissed(item: Article)
     }
 }

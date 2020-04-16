@@ -49,8 +49,8 @@ class ArticlesPageKeyedDataSource(
                 val articlesList = mutableListOf<Article>()
                 data?.children?.map {
                     it.article?.let { article ->
-                        article.visible = true
-                        articlesList.add(article) }
+                        articlesList.add(article)
+                    }
                 }
 
                 success(articlesList, after)

@@ -1,20 +1,21 @@
 package com.example.reddittop50
 
-import android.app.Application
-import com.example.reddittop50.domain.RedditRepository
-import com.example.reddittop50.domain.ServiceLocator
+import com.example.reddittop50.di.DaggerAppComponent
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
 
-class RedditTop50App : Application() {
+class RedditTop50App : DaggerApplication() {
 
     companion object {
         lateinit var instance: RedditTop50App
     }
 
-    val redditRepository: RedditRepository
-        get() = ServiceLocator.provideRedditRepository(this)
-
     override fun onCreate() {
         super.onCreate()
         instance = this
+    }
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerAppComponent.builder().application(this)!!.build()!!
     }
 }
