@@ -2,21 +2,15 @@ package com.example.reddittop50.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.reddittop50.domain.GetArticlesUseCase
-import com.example.reddittop50.domain.RedditRepository
-import com.example.reddittop50.ui.main.MainViewModel
+import com.example.reddittop50.ui.home.HomeViewModel
 
 @Suppress("UNCHECKED_CAST")
-class ViewModelFactory constructor(
-    private val redditRepository: RedditRepository
-) : ViewModelProvider.NewInstanceFactory() {
+class ViewModelFactory : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
         with(modelClass) {
             when {
-                isAssignableFrom(MainViewModel::class.java) ->
-                    MainViewModel(
-                        GetArticlesUseCase(redditRepository)
-                    )
+                isAssignableFrom(HomeViewModel::class.java) ->
+                    HomeViewModel()
                 else ->
                     throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
             }

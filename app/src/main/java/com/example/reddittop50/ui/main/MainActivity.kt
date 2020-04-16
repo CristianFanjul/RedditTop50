@@ -1,129 +1,74 @@
 package com.example.reddittop50.ui.main
 
+import android.content.res.Configuration
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.core.view.isVisible
 import com.example.reddittop50.R
-import com.example.reddittop50.RedditTop50App
-import com.example.reddittop50.misc.Constants
-import com.example.reddittop50.misc.showSnackbar
-import com.example.reddittop50.model.Article
-import com.example.reddittop50.ui.ViewModelFactory
-import com.example.reddittop50.ui.home.HomeFragment
-import com.example.reddittop50.ui.main.paging.ArticlesPagedAdapter
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.reddittop50.misc.isLandscape
+import com.example.reddittop50.misc.isScreenLandscape
+import kotlinx.android.synthetic.main.app_bar_main.*
+import kotlinx.android.synthetic.main.content_main.*
 
-class MainActivity : AppCompatActivity(), ArticlesPagedAdapter.IOnArticleListener {
 
-    private val viewModel by viewModels<MainViewModel> {
-        ViewModelFactory(RedditTop50App.instance.redditRepository)
-    }
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private val adapter = ArticlesPagedAdapter(this)
+    private var lastOrientation: Int = Configuration.ORIENTATION_PORTRAIT
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lastOrientation = resources.configuration.orientation
         setContentView(R.layout.activity_main)
-
-        setupToolbar()
-        setupDrawer()
-        setupAdapter()
-        setupObservers()
-    }
-
-    private fun setupDrawer() {
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navController = findNavController(R.id.nav_host_fragment)
-        appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.nav_home),
-            drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-    }
-
-    private fun setupToolbar() {
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-    }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-    private fun setupAdapter() {
-        val layoutManager = LinearLayoutManager(this)
-        vw_recycler.layoutManager = layoutManager
-        vw_recycler.adapter = adapter
-    }
-
-    private fun setupObservers() {
-        addArticlesListObserver()
-
-        viewModel.dataLoading.observe(this, Observer {
-            vw_refresh_articles.isRefreshing = it
-        })
-
-        vw_refresh_articles.setOnRefreshListener {
-            removeArticlesListObserver()
-            viewModel.refreshArticles()
-            addArticlesListObserver()
+        if (isScreenLandscape()) {
+            showLandscapeMode()
         }
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
+
     override fun onBackPressed() {
-        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-            closeDrawer()
+        if (!lastOrientation.isLandscape()) {
+            // Handles the back pressed to hide the details if they are being displayed.
+            if (detail_fragment_container.isVisible) {
+                showPortraitVisibility(homeVisible = true, detailVisible = false)
+            } else {
+                super.onBackPressed()
+            }
         } else {
             super.onBackPressed()
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    private fun showLandscapeMode() {
+        home_fragment_container.isVisible = true
+        detail_fragment_container.isVisible = true
     }
 
-    override fun onArticleClicked(item: Article) {
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-        val currentFragment = navHostFragment?.childFragmentManager!!.fragments[0]
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        // Check old status config: if comes from landscape show home fragment
+        val homeVisible =
+            if (lastOrientation.isLandscape()) true else home_fragment_container.isVisible
+        val detailVisible =
+            if (lastOrientation.isLandscape()) false else detail_fragment_container.isVisible
 
-        if (currentFragment is HomeFragment) {
-            currentFragment.updateFragment(item)
-        }
+        lastOrientation = newConfig.orientation
+        super.onConfigurationChanged(newConfig)
 
-        item.read = true
-        adapter.notifyDataSetChanged()
-
-        closeDrawer()
-    }
-
-    override fun onArticleDismissed(item: Article) {
-        item.visible = false
-
-        // The code below only dismisses the item visually, but the immutable list is still containing it.
-        val position = adapter.currentList?.indexOf(item) ?: Constants.INDEX_NOT_FOUND
-        if (position != Constants.INDEX_NOT_FOUND) {
-            adapter.notifyItemChanged(position)
+        if (isScreenLandscape()) {
+            showLandscapeMode()
+        } else {
+            showPortraitVisibility(homeVisible, detailVisible)
         }
     }
 
-    private fun closeDrawer() {
-        drawer_layout?.closeDrawer(GravityCompat.START)
-    }
-
-    private fun removeArticlesListObserver() {
-        viewModel.items.removeObservers(this)
-    }
-
-    private fun addArticlesListObserver() {
-        viewModel.items.observe(this, Observer {
-            adapter.submitList(it)
-        })
+    fun showPortraitVisibility(homeVisible: Boolean, detailVisible: Boolean) {
+        home_fragment_container.isVisible = homeVisible
+        detail_fragment_container.isVisible = detailVisible
     }
 }

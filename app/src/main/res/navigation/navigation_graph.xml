@@ -9,5 +9,19 @@
         android:id="@+id/nav_home"
         android:name="com.example.reddittop50.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_mainFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailFragment"
+        android:name="com.example.reddittop50.ui.detail.DetailFragment"
+        android:label="fragment_detail"
+        tools:layout="@layout/fragment_detail">
+        <argument
+            android:name="article"
+            app:argType="com.example.reddittop50.model.Article" />
+    </fragment>
 </navigation>

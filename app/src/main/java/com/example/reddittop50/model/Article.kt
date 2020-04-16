@@ -14,5 +14,4 @@ data class Article(
     val thumbnail: String?,
     @SerializedName("num_comments") val comments: Int = 0,
     var read: Boolean = false // TODO: this could be handled in other class for visual elements.
-    , var visible: Boolean = true
 ) : Parcelable
