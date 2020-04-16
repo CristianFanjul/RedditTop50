@@ -3,23 +3,31 @@ package com.example.reddittop50.ui.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
 import com.example.reddittop50.RedditTop50App
 import com.example.reddittop50.domain.GetArticlesUseCase
+import com.example.reddittop50.domain.Result
 import com.example.reddittop50.model.Article
 import com.example.reddittop50.model.QueryParams
-import com.example.reddittop50.ui.main.paging.ArticlePagedCallback
-import com.example.reddittop50.ui.main.paging.ArticlesDataFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HomeViewModel : ViewModel() {
-    lateinit var items: LiveData<PagedList<Article>>
+    private val _items = MutableLiveData<MutableList<Article>>().apply { value = mutableListOf() }
+    val items: LiveData<MutableList<Article>> = _items
+
+    private val _loadMoreItems =
+        MutableLiveData<MutableList<Article>>().apply { value = mutableListOf() }
+    val loadMoreItems: LiveData<MutableList<Article>> = _loadMoreItems
+
     var queryParams = QueryParams()
-    val dataLoading = MutableLiveData<Boolean>()
-    val snackbarText = MutableLiveData<String>()
+
+    private val _dataLoading = MutableLiveData<Boolean>()
+    val dataLoading: LiveData<Boolean> = _dataLoading
+
+    private val _snackbarText = MutableLiveData<String>()
+    val snackbarText: LiveData<String> = _snackbarText
 
     @Inject
     lateinit var articlesUseCase: GetArticlesUseCase
@@ -28,51 +36,46 @@ class HomeViewModel : ViewModel() {
         RedditTop50App.instance.androidInjector().inject(this)
     }
 
-    private val pagedCallback = object :
-        ArticlePagedCallback {
-        override fun onSuccess() {
-            dataLoading.postValue(false)
+    fun loadInitialArticles() {
+        _dataLoading.value = true
+        requestArticles {
+            _items.postValue(it)
         }
-
-        override fun onError(message: String) {
-            postShowSnackbarMessage("Loading articles error: $message}")
-            dataLoading.postValue(false)
-        }
-    }
-
-    init {
-        loadInitialArticles()
-    }
-
-    private fun loadInitialArticles() {
-        dataLoading.value = true
-        requestArticles()
-    }
-
-
-    protected suspend fun showSnackbarMessage(message: String) {
-        withContext(Dispatchers.Main) {
-            snackbarText.value = message
-        }
-    }
-
-    protected fun postShowSnackbarMessage(message: String) {
-        snackbarText.postValue(message)
     }
 
     fun refreshArticles() {
-        requestArticles()
+        queryParams.after = null
+        requestArticles {
+            _items.postValue(it)
+        }
     }
 
-    private fun requestArticles() {
-        val pagedListConfig = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setInitialLoadSizeHint(10)
-            .setPageSize(25).build()
+    fun loadMoreArticles() {
+        requestArticles {
+            _loadMoreItems.postValue(it)
+        }
+    }
 
-        items = LivePagedListBuilder(
-            ArticlesDataFactory(articlesUseCase, queryParams, pagedCallback),
-            pagedListConfig
-        ).build()
+    private fun requestArticles(onSuccess: (MutableList<Article>) -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val apiResponse = articlesUseCase.invoke(queryParams)
+            if (apiResponse is Result.Success) {
+                val data = apiResponse.content.data
+                queryParams.after = data?.after ?: queryParams.after
+                val articlesList = mutableListOf<Article>()
+                // TODO: put this logic in the use case.
+                data?.children?.map {
+                    it.article?.let { article ->
+                        articlesList.add(article)
+                    }
+                }
+                _dataLoading.postValue(false)
+                onSuccess(articlesList)
+            } else {
+                _dataLoading.postValue(false)
+                val message = (apiResponse as Result.Error).exception.message
+                _snackbarText.postValue(message)
+            }
+        }
     }
 }

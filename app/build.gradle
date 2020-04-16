@@ -74,6 +74,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
 
+    // Recycler animation
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+
     // Testing stuff.
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
