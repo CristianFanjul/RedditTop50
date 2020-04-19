@@ -5,7 +5,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.reddittop50.R
 import com.example.reddittop50.misc.ImageLoader
 import com.example.reddittop50.model.Article
@@ -22,7 +22,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun setupViewModel() {
-        detailViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
     }
 
     private fun setupObservers() {
