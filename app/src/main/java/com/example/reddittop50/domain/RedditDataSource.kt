@@ -6,16 +6,14 @@ import com.example.reddittop50.retrofit.IApiClient
 import javax.inject.Inject
 
 interface IRedditDataSource {
-    fun requestArticles(queryParams: QueryParams): Result<ApiResponse>
+    suspend fun requestArticles(queryParams: QueryParams): Result<ApiResponse>
 }
 
 class RedditRemoteDataSource @Inject constructor(
     private val redditClient: IApiClient
 ) : IRedditDataSource {
-    override fun requestArticles(queryParams: QueryParams): Result<ApiResponse> =
-        callAndResult({
-            redditClient.requestArticles(queryParams.limit, queryParams.after)
-        }, {
-            ApiResponse(null)
-        })
+
+    override suspend fun requestArticles(queryParams: QueryParams): Result<ApiResponse> {
+        return Result.Success(redditClient.requestArticles(queryParams.limit, queryParams.after))
+    }
 }
