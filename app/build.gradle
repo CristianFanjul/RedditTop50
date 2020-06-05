@@ -49,7 +49,8 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //Architecture Components
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "android.arch.lifecycle:extensions:2.2.0"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // Retrofit & OkHttp
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
@@ -61,7 +62,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Pagination.
-    def paging_version = "2.1.1"
+    def paging_version = "2.1.2"
     implementation "androidx.paging:paging-runtime-ktx:$paging_version"
 
     // Time format.
@@ -78,7 +79,29 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
 
     // Testing stuff.
-    testImplementation 'junit:junit:4.12'
+
+    // TODO: ideally this would only be present in test scope
+    debugImplementation 'androidx.fragment:fragment-testing:' + rootProject.androidxFragmentVersion
+    debugImplementation 'androidx.test:core:' + rootProject.coreVersion
+
+    testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    testImplementation 'org.robolectric:robolectric:' + rootProject.robolectricVersion
+    testImplementation 'androidx.test:core:' + rootProject.coreVersion
+    testImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion
+    testImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion
+    testImplementation 'com.google.truth:truth:' + rootProject.truthVersion
+    testAnnotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
+
+    androidTestImplementation 'androidx.test:core:' + rootProject.coreVersion
+    androidTestImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion
+    androidTestImplementation 'androidx.test:runner:' + rootProject.runnerVersion
+    androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion
+    androidTestImplementation 'androidx.fragment:fragment-testing:' + rootProject.androidxFragmentVersion
+    androidTestImplementation 'com.google.truth:truth:' + rootProject.truthVersion
+    androidTestImplementation 'org.robolectric:annotations:' + rootProject.robolectricVersion
+
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    testImplementation 'android.arch.core:core-testing:1.1.1'
 }

@@ -6,8 +6,12 @@ import javax.inject.Inject
 
 class GetArticlesUseCase @Inject constructor(
     private val redditRepository: IRedditRepository
-) {
-    operator fun invoke(queryParams: QueryParams): Result<ApiResponse> {
-        return redditRepository.requestArticles(queryParams)
+) : UseCase<ApiResponse, QueryParams>() {
+    override suspend fun invoke(params: QueryParams): Result<ApiResponse> {
+        return try {
+            redditRepository.requestArticles(params)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
     }
 }

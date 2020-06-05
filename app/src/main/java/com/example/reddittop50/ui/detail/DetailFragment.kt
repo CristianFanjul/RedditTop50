@@ -3,17 +3,24 @@ package com.example.reddittop50.ui.detail
 import android.os.Bundle
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.example.reddittop50.R
 import com.example.reddittop50.misc.ImageLoader
 import com.example.reddittop50.model.Article
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_detail.*
+import javax.inject.Inject
 
-class DetailFragment : Fragment(R.layout.fragment_detail) {
+class DetailFragment : DaggerFragment(R.layout.fragment_detail) {
 
-    private lateinit var detailViewModel: DetailViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val detailViewModel by viewModels<DetailViewModel> {
+        viewModelFactory
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -22,7 +29,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun setupViewModel() {
-        detailViewModel = ViewModelProviders.of(this).get(DetailViewModel::class.java)
+        val article = arguments?.getParcelable<Article>("article")!!
+        updateFragment(article)
     }
 
     private fun setupObservers() {
@@ -31,7 +39,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         })
     }
 
-    fun updateFragment(item: Article) {
+    private fun updateFragment(item: Article) {
         txt_vw_home.isGone = true
 
         val views = arrayOf(

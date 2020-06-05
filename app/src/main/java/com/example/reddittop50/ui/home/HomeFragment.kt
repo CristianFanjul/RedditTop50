@@ -1,36 +1,34 @@
 package com.example.reddittop50.ui.home
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.reddittop50.R
 import com.example.reddittop50.misc.Constants
-import com.example.reddittop50.misc.isScreenLandscape
 import com.example.reddittop50.misc.showSnackbar
 import com.example.reddittop50.model.Article
-import com.example.reddittop50.ui.ViewModelFactory
-import com.example.reddittop50.ui.detail.DetailFragment
 import com.example.reddittop50.ui.main.ArticlesAdapter
 import com.example.reddittop50.ui.main.IOnArticleListener
-import com.example.reddittop50.ui.main.MainActivity
+import dagger.android.support.DaggerFragment
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 import kotlinx.android.synthetic.main.fragment_home.*
+import javax.inject.Inject
 
-class HomeFragment : Fragment(R.layout.fragment_home), IOnArticleListener {
+class HomeFragment : DaggerFragment(R.layout.fragment_home), IOnArticleListener {
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<HomeViewModel> {
-        ViewModelFactory()
+        viewModelFactory
     }
 
     private val adapter = ArticlesAdapter(this)
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -38,10 +36,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), IOnArticleListener {
         setupToolbar()
         setupAdapter()
         setupObservers()
-
-        viewModel.loadInitialArticles()
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (adapter.getItems().isNullOrEmpty()) {
+            viewModel.loadInitialArticles()
+        }
+    }
 
     private fun setupToolbar() {
         setHasOptionsMenu(true)
@@ -66,7 +68,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), IOnArticleListener {
         })
 
         viewModel.snackbarText.observe(viewLifecycleOwner, Observer { message ->
-            home_root_view.showSnackbar(message)
+            view.showSnackbar(message)
         })
 
         viewModel.items.observe(viewLifecycleOwner, Observer { articles ->
@@ -89,22 +91,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), IOnArticleListener {
     }
 
     override fun onArticleClicked(item: Article) {
-        val navHostFragment =
-            activity?.supportFragmentManager?.findFragmentById(R.id.nav_host_fragment2)
-
-        if (navHostFragment is DetailFragment) {
-            navHostFragment.updateFragment(item)
-        }
-
-        if (!activity.isScreenLandscape() && activity is MainActivity) {
-            (activity as MainActivity).showPortraitVisibility(
-                homeVisible = false,
-                detailVisible = true
-            )
-        }
-
         item.read = true
         adapter.notifyDataSetChanged()
+
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToDetailFragment(item)
+        view?.findNavController()?.navigate(action)
     }
 
     override fun onArticleDismissed(item: Article) {

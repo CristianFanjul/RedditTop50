@@ -15,5 +15,7 @@ fun Int.isLandscape(): Boolean {
 }
 
 fun View?.showSnackbar(snackbarText: String, timeLength: Int = Snackbar.LENGTH_SHORT) {
-    this?.let { Snackbar.make(it, snackbarText, timeLength).show() }
+    this?.let {
+        Snackbar.make(it, snackbarText, timeLength).show()
+    }
 }
