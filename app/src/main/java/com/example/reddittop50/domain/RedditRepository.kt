@@ -5,12 +5,12 @@ import com.example.reddittop50.model.QueryParams
 import javax.inject.Inject
 
 interface IRedditRepository {
-    fun requestArticles(queryParams: QueryParams): Result<ApiResponse>
+    suspend fun requestArticles(queryParams: QueryParams): Result<ApiResponse>
 }
 
 class RedditRepository @Inject constructor(
     private val remoteDataSource: IRedditDataSource
 ) : IRedditRepository {
-    override fun requestArticles(queryParams: QueryParams): Result<ApiResponse> =
+    override suspend fun requestArticles(queryParams: QueryParams): Result<ApiResponse> =
         remoteDataSource.requestArticles(queryParams)
 }
